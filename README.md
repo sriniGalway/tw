@@ -53,7 +53,8 @@ aws_secret_access_key = [AWS SECRET ACCESS KEY]
 aws_default_region="eu-west2"
 
 3.	Initialize terrafrom
-terraform init
+This provides a template for running a simple two-tier architecture on Amazon Web services. The premise is that you have stateless app servers running behind an ELB serving traffic.
+ $ terraform init
 Initializing the backend...
 
 Initializing provider plugins...
@@ -76,7 +77,7 @@ any changes that are required for your infrastructure. All Terraform commands
 should now work.
 
 4. Apply Terraform template
-terraform apply -var 'key_name=<Key name>' -var 'public_key_path=<Public key path>'
+ $ terraform apply -var 'key_name=<Key name>' -var 'public_key_path=<Public key path>'
 ex: terraform apply -var 'key_name=prod' -var 'public_key_path=/Users/tw/.ssh/prod.pub'
 
 An execution plan has been generated and is shown below.
@@ -84,7 +85,7 @@ Resource actions are indicated with the following symbols:
   + create
 
 Terraform will perform the following actions:
-# aws_elb.web will be created
+ aws_elb.web will be created
   + resource "aws_elb" "web" {
       + arn                         = (known after apply)
       + availability_zones          = (known after apply)
@@ -189,6 +190,7 @@ Terraform will perform the following actions:
     }
 
 Terraform will create all the required resources and provision the vm
+After we run terraform apply on this configuration, it will automatically output the DNS address of the ELB. After the instance registers, this should respond with the default nginx web page.
 
 5. Test (in an automated fashion)
 + make test output
@@ -228,3 +230,12 @@ Retrieving robert/hooke/1.3.0/hooke-1.3.0.pom from clojars
 Retrieving robert/hooke/1.3.0/hooke-1.3.0.jar from clojars
 Retrieving http-kit/fake/http-kit.fake/0.2.1/http-kit.fake-0.2.1.jar from clojars
 All checks (11) succeeded.
+
+# Future work
+Make some brief recommendations about your approach to ‘future work’. I.e. how would you extend what you have done to a continuous delivery pipeline and a
+productionised system. This could take the form of a document or diagrams. Mention how you would engage with the team.
+
+for future,
+1. we could extend this by improving the provisioner to execute scripts on remote machine as part of resource creation or destruction or for any failures.
+or by pre-baking configured AMIs with Packer.
+2. We could have Jenkins setup , once we have any update to terraform template or update on the jar files, it could initiate the terraform apply using the configuration management. 
